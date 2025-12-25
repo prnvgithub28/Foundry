@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Logo from '../components/Logo';
 
 const Home = () => {
   return (
@@ -7,6 +8,9 @@ const Home = () => {
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-blue-50 to-indigo-100 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="mb-8">
+            <Logo size="large" className="justify-center" />
+          </div>
           <h1 className="text-6xl font-bold text-gray-900 mb-6">
             Lost & Found, Powered by AI
           </h1>
