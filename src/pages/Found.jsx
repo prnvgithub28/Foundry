@@ -20,36 +20,36 @@ const Found = () => {
     return null;
   }
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white shadow-sm rounded-lg p-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Report a Found Item</h1>
-          <p className="text-gray-600 mb-8">
+        <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Report a Found Item</h1>
+          <p className="text-gray-600 dark:text-gray-300 mb-8">
             Thank you for helping others! Please provide details about the item you found.
           </p>
           
           <form className="space-y-6">
             <div>
-              <label htmlFor="itemName" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="itemName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Item Name *
               </label>
               <input
                 type="text"
                 id="itemName"
                 name="itemName"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="e.g., Blue backpack, iPhone 13, Silver watch"
               />
             </div>
             
             <div>
-              <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Category *
               </label>
               <select
                 id="category"
                 name="category"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
                 <option value="">Select a category</option>
                 <option value="electronics">Electronics</option>
@@ -71,58 +71,58 @@ const Found = () => {
                 id="description"
                 name="description"
                 rows={4}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="Describe the item in detail including color, size, brand, distinguishing features..."
               />
             </div>
             
             <div>
-              <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="location" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Found Location *
               </label>
               <input
                 type="text"
                 id="location"
                 name="location"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="e.g., Library 2nd floor, Student Center cafeteria, Dorm Building A"
               />
             </div>
             
             <div>
-              <label htmlFor="dateFound" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="dateFound" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Date Found *
               </label>
               <input
                 type="date"
                 id="dateFound"
                 name="dateFound"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               />
             </div>
             
             <div>
-              <label htmlFor="storageLocation" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="storageLocation" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Where is the item being stored? *
               </label>
               <input
                 type="text"
                 id="storageLocation"
                 name="storageLocation"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="e.g., Campus Security Office, My dorm room, With professor Smith"
               />
             </div>
             
             <div>
-              <label htmlFor="contactInfo" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="contactInfo" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Your Contact Information *
               </label>
               <input
                 type="email"
                 id="contactInfo"
                 name="contactInfo"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="your.email@university.edu"
               />
             </div>
@@ -136,7 +136,7 @@ const Found = () => {
               </button>
               <button
                 type="button"
-                className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+                className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-6 py-3 rounded-lg font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
               >
                 Cancel
               </button>

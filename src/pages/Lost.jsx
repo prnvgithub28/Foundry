@@ -65,11 +65,11 @@ const Lost = () => {
     }
   };
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white shadow-sm rounded-lg p-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Report a Lost Item</h1>
-          <p className="text-gray-600 mb-8">
+        <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Report a Lost Item</h1>
+          <p className="text-gray-600 dark:text-gray-300 mb-8">
             Help us help you find your lost item by providing as much detail as possible.
           </p>
           
@@ -85,7 +85,7 @@ const Lost = () => {
           
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="itemName" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="itemName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Item Name *
               </label>
               <input
@@ -94,20 +94,20 @@ const Lost = () => {
                 name="itemType"
                 value={formData.itemType}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="e.g., Blue backpack, iPhone 13, Silver watch"
                 required
               />
             </div>
             
             <div>
-              <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Category *
               </label>
               <select
                 id="category"
                 name="category"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
                 <option value="">Select a category</option>
                 <option value="electronics">Electronics</option>
@@ -122,52 +122,52 @@ const Lost = () => {
             </div>
             
             <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Description *
               </label>
               <textarea
                 id="description"
                 name="description"
                 rows={4}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="Describe your item in detail including color, size, brand, distinguishing features..."
               />
             </div>
             
             <div>
-              <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="location" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Last Seen Location *
               </label>
               <input
                 type="text"
                 id="location"
                 name="location"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="e.g., Library 2nd floor, Student Center cafeteria, Dorm Building A"
               />
             </div>
             
             <div>
-              <label htmlFor="dateLost" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="dateLost" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Date Lost *
               </label>
               <input
                 type="date"
                 id="dateLost"
                 name="dateLost"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               />
             </div>
             
             <div>
-              <label htmlFor="contactInfo" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="contactInfo" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Contact Information *
               </label>
               <input
                 type="email"
                 id="contactInfo"
                 name="contactInfo"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="your.email@university.edu"
               />
             </div>
@@ -182,7 +182,7 @@ const Lost = () => {
               </button>
               <button
                 type="button"
-                className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+                className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-6 py-3 rounded-lg font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
               >
                 Cancel
               </button>

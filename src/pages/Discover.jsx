@@ -53,31 +53,31 @@ const Discover = () => {
     fetchItems();
   };
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Discover Items</h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Discover Items</h1>
+          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Browse through lost and found items. Use filters to narrow down your search and find what you're looking for.
           </p>
         </div>
         
-        <div className="bg-white shadow-sm rounded-lg p-6 mb-8">
+        <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-              <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="search" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Search
               </label>
               <input
                 type="text"
                 id="search"
                 placeholder="Search items..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               />
             </div>
             
             <div>
-              <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Category
               </label>
               <select
@@ -85,7 +85,7 @@ const Discover = () => {
                 name="itemType"
                 value={filters.itemType}
                 onChange={handleFilterChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
                 <option value="">All Categories</option>
                 <option value="electronics">Electronics</option>
@@ -100,12 +100,12 @@ const Discover = () => {
             </div>
             
             <div>
-              <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="status" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Status
               </label>
               <select
                 id="status"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
                 <option value="">All Items</option>
                 <option value="lost">Lost Items</option>
@@ -114,12 +114,12 @@ const Discover = () => {
             </div>
             
             <div>
-              <label htmlFor="dateRange" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="dateRange" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Date Range
               </label>
               <select
                 id="dateRange"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
                 <option value="">Any Time</option>
                 <option value="today">Today</option>
@@ -131,11 +131,11 @@ const Discover = () => {
           </div>
           
           <div className="mt-6 flex justify-between items-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-300">
               Showing <span className="font-medium">24</span> items
             </p>
             <div className="flex gap-2">
-              <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+              <button className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600">
                 Newest First
               </button>
               <button className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-lg hover:bg-blue-700">
@@ -148,33 +148,33 @@ const Discover = () => {
         {loading ? (
           <div className="text-center py-12">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <p className="mt-4 text-gray-600">Loading items...</p>
+            <p className="mt-4 text-gray-600 dark:text-gray-300">Loading items...</p>
           </div>
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {items.map((item) => (
-                <div key={item.id} className="bg-white shadow-sm rounded-lg p-6 hover:shadow-md transition-shadow">
+                <div key={item.id} className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6 hover:shadow-md transition-shadow">
                   <div className="flex items-start justify-between mb-4">
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                       item.type === 'lost' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
                     }`}>
                       {item.type === 'lost' ? 'Lost' : 'Found'}
                     </span>
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
                       {new Date(item.createdAt).toLocaleDateString()}
                     </span>
                   </div>
                   
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
                     {item.itemType}
                   </h3>
                   
-                  <p className="text-gray-600 text-sm mb-4">
+                  <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
                     {item.description}
                   </p>
                   
-                  <div className="text-sm text-gray-500 mb-4">
+                  <div className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                     <p className="flex items-center mb-1">
                       <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -199,7 +199,7 @@ const Discover = () => {
             
             {items.length === 0 && (
               <div className="text-center py-12">
-                <p className="text-gray-600">No items found matching your criteria.</p>
+                <p className="text-gray-600 dark:text-gray-300">No items found matching your criteria.</p>
               </div>
             )}
           </>
@@ -207,19 +207,19 @@ const Discover = () => {
         
         <div className="mt-12 flex justify-center">
           <nav className="flex items-center space-x-2">
-            <button className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+            <button className="px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600">
               Previous
             </button>
             <button className="px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-lg">
               1
             </button>
-            <button className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+            <button className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600">
               2
             </button>
-            <button className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+            <button className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600">
               3
             </button>
-            <button className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+            <button className="px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600">
               Next
             </button>
           </nav>
