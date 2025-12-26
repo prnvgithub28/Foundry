@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
+import { createUserWithEmailAndPassword, signInWithPopup, googleProvider } from '../firebase';
+import { auth } from '../firebase';
 
 const SignUp = () => {
   const { login } = useAuth();
@@ -47,11 +49,20 @@ const SignUp = () => {
     }
 
     try {
-      // Create user data
+      // Create user with Firebase
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+
+      const firebaseUser = userCredential.user;
+      
+      // Create user data for backend
       const userData = {
-        uid: 'user_' + Date.now(),
+        uid: firebaseUser.uid,
         name: formData.name,
-        email: formData.email
+        email: firebaseUser.email
       };
 
       // Create user in backend
@@ -65,7 +76,18 @@ const SignUp = () => {
       navigate('/');
 
     } catch (error) {
-      setError('Registration failed. Please try again.');
+      console.error('Firebase sign up error:', error);
+      let errorMessage = 'Registration failed. Please try again.';
+      
+      if (error.code === 'auth/email-already-in-use') {
+        errorMessage = 'An account with this email already exists.';
+      } else if (error.code === 'auth/weak-password') {
+        errorMessage = 'Password is too weak. Please choose a stronger password.';
+      } else if (error.code === 'auth/invalid-email') {
+        errorMessage = 'Invalid email address.';
+      }
+      
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

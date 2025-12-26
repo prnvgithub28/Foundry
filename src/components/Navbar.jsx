@@ -2,9 +2,24 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Logo from './Logo';
 import { useAuth } from '../contexts/AuthContext';
+import { signOut } from '../firebase';
+import { auth } from '../firebase';
 
 const Navbar = () => {
   const { user, logout, isAuthenticated } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      // Sign out from Firebase
+      await signOut(auth);
+      // Clear local state
+      logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Still clear local state even if Firebase logout fails
+      logout();
+    }
+  };
 
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200">
@@ -44,7 +59,7 @@ const Navbar = () => {
                   Welcome, {user.name}
                 </span>
                 <button
-                  onClick={logout}
+                  onClick={handleLogout}
                   className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors"
                 >
                   Sign Out

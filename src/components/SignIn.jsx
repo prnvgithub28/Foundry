@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
+import { signInWithEmailAndPassword, signInWithPopup, googleProvider } from '../firebase';
+import { auth } from '../firebase';
 
 const SignIn = () => {
   const { login } = useAuth();
@@ -32,30 +34,88 @@ const SignIn = () => {
     }
 
     try {
-      // Mock authentication - in real app, use Firebase Auth
-      const mockUser = {
-        uid: 'user_' + Date.now(),
-        email: formData.email,
-        name: formData.email.split('@')[0]
+      // Sign in with Firebase
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+
+      const firebaseUser = userCredential.user;
+      
+      // Create user data for backend
+      const userData = {
+        uid: firebaseUser.uid,
+        email: firebaseUser.email,
+        name: firebaseUser.displayName || firebaseUser.email.split('@')[0]
       };
 
-      // Create user in backend if not exists
+      // Create/update user in backend
       try {
-        await api.auth.createUser(mockUser);
+        await api.auth.createUser(userData);
       } catch (error) {
-        // User might already exist, that's okay for sign in
-        console.log('User might already exist');
+        // User might already exist, that's okay
+        console.log('User might already exist in backend');
       }
 
       // Store user in localStorage
-      localStorage.setItem('foundry_user', JSON.stringify(mockUser));
+      localStorage.setItem('foundry_user', JSON.stringify(userData));
       
       // Login and redirect
-      login(mockUser);
+      login(userData);
       navigate('/');
 
     } catch (error) {
-      setError('Authentication failed. Please check your credentials.');
+      console.error('Firebase sign in error:', error);
+      let errorMessage = 'Authentication failed. Please check your credentials.';
+      
+      if (error.code === 'auth/user-not-found') {
+        errorMessage = 'No account found with this email.';
+      } else if (error.code === 'auth/wrong-password') {
+        errorMessage = 'Incorrect password.';
+      } else if (error.code === 'auth/invalid-email') {
+        errorMessage = 'Invalid email address.';
+      }
+      
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      // Sign in with Google
+      const result = await signInWithPopup(auth, googleProvider);
+      const firebaseUser = result.user;
+      
+      // Create user data for backend
+      const userData = {
+        uid: firebaseUser.uid,
+        email: firebaseUser.email,
+        name: firebaseUser.displayName || firebaseUser.email.split('@')[0]
+      };
+
+      // Create/update user in backend
+      try {
+        await api.auth.createUser(userData);
+      } catch (error) {
+        console.log('User might already exist in backend');
+      }
+
+      // Store user in localStorage
+      localStorage.setItem('foundry_user', JSON.stringify(userData));
+      
+      // Login and redirect
+      login(userData);
+      navigate('/');
+
+    } catch (error) {
+      console.error('Google sign in error:', error);
+      setError('Failed to sign in with Google. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -167,7 +227,9 @@ value={formData.email}
             <div className="mt-6">
               <button
                 type="button"
-                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                onClick={handleGoogleSignIn}
+                disabled={loading}
+                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
               >
                 <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
