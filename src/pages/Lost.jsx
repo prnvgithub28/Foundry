@@ -10,6 +10,19 @@ const Lost = () => {
   const navigate = useNavigate();
   const toastShownRef = useRef(false);
   
+  // Move all hooks before conditional returns
+  const [formData, setFormData] = useState({
+    itemType: '',
+    category: '',
+    description: '',
+    location: '',
+    dateLost: '',
+    images: []
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message, setMessage] = useState('');
+  const [matches, setMatches] = useState([]);
+  
   useEffect(() => {
     if (!isAuthenticated && !toastShownRef.current) {
       toast.warning('Please login first to report a lost item');
@@ -22,16 +35,6 @@ const Lost = () => {
     return null;
   }
 
-  const [formData, setFormData] = useState({
-    itemType: '',
-    description: '',
-    location: '',
-    dateLost: '',
-    images: []
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [message, setMessage] = useState('');
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -43,23 +46,52 @@ const Lost = () => {
     e.preventDefault();
     setIsSubmitting(true);
     setMessage('');
+    setMatches([]);
 
     try {
-      const response = await api.items.createLostItem(formData);
+      // Get the first image URL if available
+      const imageUrl = formData.images && formData.images.length > 0 ? formData.images[0].url : '';
       
-      if (response.itemId) {
-        setMessage('Lost item reported successfully! We\'ll help you find it.');
+      const payload = {
+        itemType: formData.itemType,
+        category: formData.category,
+        description: formData.description,
+        location: formData.location,
+        dateLost: formData.dateLost,
+        imageUrl: imageUrl,
+        contactInfo: '' // Add if you have user contact info
+      };
+
+      console.log('Submitting payload:', payload);
+      console.log('Form data:', formData);
+
+      const response = await api.items.createLostItem(payload);
+      
+      console.log('API response:', response);
+      
+      if (response.item) {
+        setMessage('Lost item reported successfully!');
+        
+        // Show matches if available
+        if (response.item.matches && response.item.matches.length > 0) {
+          setMatches(response.item.matches);
+          setMessage(`Lost item reported successfully! Found ${response.item.matches.length} potential matches.`);
+        }
+        
         setFormData({
           itemType: '',
+          category: '',
           description: '',
           location: '',
           dateLost: '',
-          imageUrl: ''
+          images: []
         });
       } else {
         setMessage('Error: ' + (response.error || 'Failed to submit'));
       }
     } catch (error) {
+      console.error('Submit error:', error);
+      console.error('Error details:', error.response?.data || error.message);
       setMessage('Error: Failed to connect to server');
     } finally {
       setIsSubmitting(false);
@@ -81,6 +113,33 @@ const Lost = () => {
                 : 'bg-green-100 text-green-700 border border-green-200'
             }`}>
               {message}
+            </div>
+          )}
+
+          {matches.length > 0 && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">
+                Potential Matches Found ({matches.length})
+              </h3>
+              <p className="text-sm text-blue-700 mb-4">
+                These found items might match what you're looking for:
+              </p>
+              <div className="space-y-3">
+                {matches.map((match, index) => (
+                  <div key={index} className="bg-white p-4 rounded-lg border border-blue-200">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-medium text-gray-900">{match.itemType}</p>
+                        <p className="text-sm text-gray-600">{match.description}</p>
+                        <p className="text-sm text-gray-500">Location: {match.location}</p>
+                      </div>
+                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                        {Math.round(match.similarity * 100)}% match
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
           
@@ -108,6 +167,8 @@ const Lost = () => {
               <select
                 id="category"
                 name="category"
+                value={formData.category}
+                onChange={handleChange}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
                 <option value="">Select a category</option>
@@ -129,9 +190,12 @@ const Lost = () => {
               <textarea
                 id="description"
                 name="description"
+                value={formData.description}
+                onChange={handleChange}
                 rows={4}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="Describe your item in detail including color, size, brand, distinguishing features..."
+                required
               />
             </div>
             
@@ -150,8 +214,11 @@ const Lost = () => {
                 type="text"
                 id="location"
                 name="location"
+                value={formData.location}
+                onChange={handleChange}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="e.g., Library 2nd floor, Student Center cafeteria, Dorm Building A"
+                required
               />
             </div>
             
@@ -163,7 +230,10 @@ const Lost = () => {
                 type="date"
                 id="dateLost"
                 name="dateLost"
+                value={formData.dateLost}
+                onChange={handleChange}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                required
               />
             </div>
             

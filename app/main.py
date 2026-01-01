@@ -97,6 +97,9 @@ def report_item(
         final_emb = fuse_embeddings(img_emb, txt_emb)
 
     if report_type == "lost":
+        # For lost items, find similar found items to help user find their lost item
+        matches = find_matches(final_emb, TOP_K)
+        
         insert_item({
             "item_id": item_id,
             "category": category,
@@ -108,17 +111,24 @@ def report_item(
         return {
             "status": "success",
             "message": "Lost item reported successfully",
-            "item_id": item_id
+            "item_id": item_id,
+            "matches": matches
         }
 
     elif report_type == "found":
-        matches = find_matches(final_emb, TOP_K)
+        # For found items, just store them to help others find their lost items
+        insert_item({
+            "item_id": item_id,
+            "category": category,
+            "location": location
+        })
+
+        add_vector(final_emb, item_id)
 
         return {
             "status": "success",
-            "message": "Found item reported",
-            "item_id": item_id,
-            "matches": matches
+            "message": "Found item reported successfully",
+            "item_id": item_id
         }
 
     return {"error": "Invalid report_type (use 'lost' or 'found')"}
