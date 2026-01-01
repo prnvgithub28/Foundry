@@ -26,7 +26,7 @@
    MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/foundry
    ```
 
-## Verification
+## Verificationn
 
 After setup, verify MongoDB is running:
 
