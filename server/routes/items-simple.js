@@ -164,11 +164,95 @@ router.post('/found', async (req, res) => {
 
 /**
  * GET /items/discover
- * Get all lost and found items
+ * Get all lost and found items with optional filtering
  */
 router.get('/discover', async (req, res) => {
   try {
-    const items = await database.getAllItems();
+    const {
+      search = '',
+      itemType = '',
+      status = 'all',
+      dateRange = '',
+      sortBy = 'newest'
+    } = req.query;
+
+    console.log('Discover filters:', req.query);
+
+    // Get all items first
+    let items = await database.getAllItems();
+    console.log(`Total items before filtering: ${items.length}`);
+    
+    // Apply status filter first (most important)
+    if (status && status !== 'all') {
+      console.log(`Filtering by status: ${status}`);
+      items = items.filter(item => item.reportType === status);
+      console.log(`Items after status filter (${status}): ${items.length}`);
+    }
+
+    // Apply itemType filter
+    if (itemType) {
+      console.log(`Filtering by itemType: ${itemType}`);
+      items = items.filter(item => item.itemType === itemType);
+      console.log(`Items after itemType filter (${itemType}): ${items.length}`);
+    }
+    
+    // Apply search filter
+    if (search) {
+      console.log(`Filtering by search: ${search}`);
+      const searchLower = search.toLowerCase();
+      items = items.filter(item => 
+        item.itemType?.toLowerCase().includes(searchLower) ||
+        item.description?.toLowerCase().includes(searchLower) ||
+        item.location?.toLowerCase().includes(searchLower)
+      );
+      console.log(`Items after search filter: ${items.length}`);
+    }
+
+    // Apply date range filter
+    if (dateRange) {
+      console.log(`Filtering by dateRange: ${dateRange}`);
+      const now = new Date();
+      const cutoffDate = new Date();
+      
+      switch (dateRange) {
+        case 'today':
+          cutoffDate.setHours(0, 0, 0, 0);
+          break;
+        case 'week':
+          cutoffDate.setDate(now.getDate() - 7);
+          break;
+        case 'month':
+          cutoffDate.setMonth(now.getMonth() - 1);
+          break;
+        case 'three-months':
+          cutoffDate.setMonth(now.getMonth() - 3);
+          break;
+        default:
+          break;
+      }
+      
+      items = items.filter(item => {
+        const itemDate = new Date(item.createdAt);
+        return itemDate >= cutoffDate;
+      });
+      console.log(`Items after dateRange filter (${dateRange}): ${items.length}`);
+    }
+
+    // Apply sorting
+    items.sort((a, b) => {
+      const dateA = new Date(a.createdAt || 0);
+      const dateB = new Date(b.createdAt || 0);
+      
+      switch (sortBy) {
+        case 'oldest':
+          return dateA - dateB;
+        case 'newest':
+        default:
+          return dateB - dateA;
+      }
+    });
+    
+    console.log(`Returning ${items.length} items after filtering`);
     
     res.json({
       items: items,
@@ -222,6 +306,34 @@ router.get('/found', async (req, res) => {
     res.status(500).json({ 
       error: 'Failed to fetch found items' 
     });
+  }
+});
+
+/**
+ * GET /items/test
+ * Test filtering logic
+ */
+router.get('/test', async (req, res) => {
+  try {
+    const items = await database.getAllItems();
+    console.log(`Total items: ${items.length}`);
+    
+    const lostItems = items.filter(item => item.reportType === 'lost');
+    const foundItems = items.filter(item => item.reportType === 'found');
+    
+    console.log(`Lost items: ${lostItems.length}`);
+    console.log(`Found items: ${foundItems.length}`);
+    
+    res.json({
+      total: items.length,
+      lost: lostItems.length,
+      found: foundItems.length,
+      sampleLost: lostItems.slice(0, 2).map(item => ({ id: item._id, reportType: item.reportType })),
+      sampleFound: foundItems.slice(0, 2).map(item => ({ id: item._id, reportType: item.reportType }))
+    });
+  } catch (error) {
+    console.error('Test error:', error);
+    res.status(500).json({ error: 'Test failed' });
   }
 });
 

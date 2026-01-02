@@ -53,8 +53,13 @@ const api = {
 
     async getDiscoverItems(filters = {}) {
       const queryParams = new URLSearchParams(filters);
-      const response = await fetch(`${API_BASE_URL}/items/discover?${queryParams}`);
-      return response.json();
+      const url = `${API_BASE_URL}/items/discover?${queryParams}`;
+      console.log('Making API call to:', url);
+      const response = await fetch(url);
+      console.log('API response status:', response.status);
+      const data = await response.json();
+      console.log('API response data:', data);
+      return data;
     },
 
     async getUserLostItems(uid) {
