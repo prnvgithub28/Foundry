@@ -2,11 +2,25 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../contexts/AuthContext';
+import ImageUpload from '../components/ImageUpload';
+import api from '../services/api';
 
 const Found = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const toastShownRef = useRef(false);
+  
+  const [formData, setFormData] = useState({
+    itemType: '',
+    category: '',
+    description: '',
+    location: '',
+    dateFound: '',
+    contactInfo: '',
+    images: []
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message, setMessage] = useState('');
   
   useEffect(() => {
     if (!isAuthenticated && !toastShownRef.current) {
@@ -19,6 +33,64 @@ const Found = () => {
   if (!isAuthenticated) {
     return null;
   }
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log('Form submitted!');
+    setIsSubmitting(true);
+    setMessage('');
+
+    try {
+      // Get the first image URL if available
+      const imageUrl = formData.images && formData.images.length > 0 ? formData.images[0].url : '';
+      
+      const payload = {
+        itemType: formData.itemType,
+        category: formData.category,
+        description: formData.description,
+        location: formData.location,
+        dateFound: formData.dateFound,
+        imageUrl: imageUrl,
+        contactInfo: formData.contactInfo
+      };
+
+      console.log('Submitting found item payload:', payload);
+      console.log('Form data:', formData);
+
+      const response = await api.items.createFoundItem(payload);
+      
+      console.log('API response:', response);
+      
+      if (response.item) {
+        setMessage('Found item reported successfully! Thank you for helping others find their lost items.');
+        
+        setFormData({
+          itemType: '',
+          category: '',
+          description: '',
+          location: '',
+          dateFound: '',
+          contactInfo: '',
+          images: []
+        });
+      } else {
+        setMessage('Error: ' + (response.error || 'Failed to submit'));
+      }
+    } catch (error) {
+      console.error('Submit error:', error);
+      console.error('Error details:', error.response?.data || error.message);
+      setMessage('Error: Failed to connect to server');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -28,7 +100,17 @@ const Found = () => {
             Thank you for helping others! Please provide details about the item you found.
           </p>
           
-          <form className="space-y-6">
+          {message && (
+            <div className={`p-4 rounded-lg mb-6 ${
+              message.includes('Error') 
+                ? 'bg-red-100 text-red-700 border border-red-200' 
+                : 'bg-green-100 text-green-700 border border-green-200'
+            }`}>
+              {message}
+            </div>
+          )}
+          
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="itemName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Item Name *
@@ -36,9 +118,12 @@ const Found = () => {
               <input
                 type="text"
                 id="itemName"
-                name="itemName"
+                name="itemType"
+                value={formData.itemType}
+                onChange={handleChange}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="e.g., Blue backpack, iPhone 13, Silver watch"
+                required
               />
             </div>
             
@@ -49,6 +134,8 @@ const Found = () => {
               <select
                 id="category"
                 name="category"
+                value={formData.category}
+                onChange={handleChange}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
                 <option value="">Select a category</option>
@@ -64,17 +151,27 @@ const Found = () => {
             </div>
             
             <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Description *
               </label>
               <textarea
                 id="description"
                 name="description"
+                value={formData.description}
+                onChange={handleChange}
                 rows={4}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="Describe the item in detail including color, size, brand, distinguishing features..."
+                required
               />
             </div>
+            
+            <ImageUpload
+              onImageUpload={(images) => setFormData({...formData, images})}
+              existingImages={formData.images}
+              maxImages={1}
+              label="Upload Image of Found Item"
+            />
             
             <div>
               <label htmlFor="location" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -84,8 +181,11 @@ const Found = () => {
                 type="text"
                 id="location"
                 name="location"
+                value={formData.location}
+                onChange={handleChange}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="e.g., Library 2nd floor, Student Center cafeteria, Dorm Building A"
+                required
               />
             </div>
             
@@ -97,7 +197,10 @@ const Found = () => {
                 type="date"
                 id="dateFound"
                 name="dateFound"
+                value={formData.dateFound}
+                onChange={handleChange}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                required
               />
             </div>
             
@@ -122,17 +225,21 @@ const Found = () => {
                 type="email"
                 id="contactInfo"
                 name="contactInfo"
+                value={formData.contactInfo}
+                onChange={handleChange}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="your.email@university.edu"
+                required
               />
             </div>
             
             <div className="flex gap-4">
               <button
                 type="submit"
-                className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors"
+                disabled={isSubmitting}
+                className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Submit Found Item Report
+                {isSubmitting ? 'Submitting...' : 'Submit Found Item Report'}
               </button>
               <button
                 type="button"
