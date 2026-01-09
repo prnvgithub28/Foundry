@@ -7,16 +7,18 @@ class AIService {
 
   async reportItem(itemData) {
     try {
+      const FormData = require('form-data');
       const formData = new FormData();
-      formData.append('image_url', itemData.imageUrl);
-      formData.append('description', itemData.description);
-      formData.append('location', itemData.location);
+      
+      formData.append('image_url', itemData.imageUrl || '');
+      formData.append('description', itemData.description || '');
+      formData.append('location', itemData.location || '');
       formData.append('category', itemData.category || 'general');
-      formData.append('report_type', itemData.reportType);
+      formData.append('report_type', itemData.reportType || '');
 
       const response = await axios.post(`${this.fastApiUrl}/report`, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          ...formData.getHeaders(),
         },
       });
 
@@ -27,7 +29,7 @@ class AIService {
 
       return response.data;
     } catch (error) {
-      console.error('Error reporting item to AI service:', error);
+      console.error('Error reporting item to AI service:', error.response?.data || error.message);
       throw error;
     }
   }
