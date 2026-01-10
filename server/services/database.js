@@ -72,7 +72,7 @@ class DatabaseService {
   async updateItem(itemId, updateData) {
     try {
       const result = await this.itemsCollection.updateOne(
-        { itemId },
+        { _id: new ObjectId(itemId) },
         { 
           $set: { 
             ...updateData, 
